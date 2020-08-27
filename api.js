@@ -5,6 +5,7 @@ const Joi = require('joi')
 const port = process.env.PORT || 8080
 const app = express()
 
+const message404 = "<h1><strong>Programming language not found !</strong><h1>"
 app.use(express.json())
 
 const languages = [
@@ -24,7 +25,7 @@ app.get('/api/languages', (req,res)=>{
 // READ ONE PROGRAMMING LANGUAGE
 app.get('/api/languages/:id', (req, res)=>{
     const language = languages.find(lang => lang.id === req.params.id * 1)
-    if (!language) return res.status(404).send("<h1><strong>Programming language not found !</strong><h1>")
+    if (!language) return res.status(404).send(message404)
     res.send(language)
 })
 
@@ -48,7 +49,7 @@ app.post('/api/languages', (req ,res)=>{
 //UPDATING AN EXSISTING PROGRAMMING LANGUAGE
 app.put('/api/languages/:id' ,(req, res)=>{
     const language = languages.find(lang => lang.id === parseInt(req.params.id))
-    if (!language) return res.status(404).send("<h1><strong>Programming language not found !</strong><h1>")
+    if (!language) return res.status(404).send(message404)
 
     const schema = Joi.object({
         name : Joi.string().min(1).required()
@@ -64,7 +65,7 @@ app.put('/api/languages/:id' ,(req, res)=>{
 
 app.delete('/api/languages/:id' ,(req,res)=>{
     const language = languages.find(lang => lang.id === parseInt(req.params.id))
-    if (!language) return res.status(404).send("<h1><strong>Programming language not found !</strong><h1>")
+    if (!language) return res.status(404).send(message404)
 
     const languageIndex = languages.indexOf(language)
     languages.splice(languageIndex , 1)
