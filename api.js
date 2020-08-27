@@ -17,6 +17,15 @@ const languages = [
 
 
 
+const joiValidation = (income , outcome)=>{
+    const schema = Joi.object({
+        name : Joi.string().min(1).required()
+    })
+    const {error} = schema.validate(income)
+    if (error) return outcome.status(400).send(`<h1><strong>${error.details[0].message}</strong><h1>`)
+
+} 
+
 // READ ALL THE PROGRAMMING LANGUAGES
 app.get('/api/languages', (req,res)=>{
         res.send(languages)
@@ -31,11 +40,7 @@ app.get('/api/languages/:id', (req, res)=>{
 
 // CREATE A NEW PROGRAMMING LANGUAGE
 app.post('/api/languages', (req ,res)=>{
-    const schema = Joi.object({
-        name : Joi.string().min(1).required()
-    })
-    const {error} = schema.validate(req.body)
-    if (error) return res.status(400).send(`<h1><strong>${error.details[0].message}</strong><h1>`)
+     joiValidation(req.body , res)
 
     const language ={
         id : languages.length + 1,
@@ -51,11 +56,7 @@ app.put('/api/languages/:id' ,(req, res)=>{
     const language = languages.find(lang => lang.id === parseInt(req.params.id))
     if (!language) return res.status(404).send(message404)
 
-    const schema = Joi.object({
-        name : Joi.string().min(1).required()
-    })
-    const {error} = schema.validate(req.body)
-    if (error) return res.status(400).send(`<h1><strong>${error.details[0].message}</strong><h1>`)
+    joiValidation(req.body , res)
 
     language.name = req.body.name
     res.json({success : "successufuly updated" , language})
